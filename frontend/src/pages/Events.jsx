@@ -71,7 +71,7 @@ function Events({ user }) {
 
     return (
         <div>
-            <h1>Upcoming Events</h1>
+            <h1>Upcoming Events 🎫</h1>
 
             {events.length === 0 ? (
                 <p>No events available.</p>
