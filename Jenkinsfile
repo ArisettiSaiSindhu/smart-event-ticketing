@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -42,20 +41,31 @@ pipeline {
             }
         }
 
-        stage('CI Complete') {
+        stage('Deploy') {
             steps {
-                echo 'CI pipeline completed successfully!'
+                bat '''
+                if not exist "%WORKSPACE%\\deployment" mkdir "%WORKSPACE%\\deployment"
+                if exist "%WORKSPACE%\\deployment\\frontend" rmdir /S /Q "%WORKSPACE%\\deployment\\frontend"
+                xcopy "%WORKSPACE%\\frontend\\dist" "%WORKSPACE%\\deployment\\frontend" /E /I /Y
+                echo Deployment completed successfully.
+                '''
+            }
+        }
+
+        stage('CI/CD Complete') {
+            steps {
+                echo 'CI/CD pipeline completed successfully!'
             }
         }
     }
 
     post {
         success {
-            echo 'BUILD SUCCESSFUL - Smart Event Ticketing is ready for deployment.'
+            echo 'BUILD AND DEPLOYMENT SUCCESSFUL!'
         }
 
         failure {
-            echo 'BUILD FAILED - Please check the console output.'
+            echo 'BUILD OR DEPLOYMENT FAILED - Check console output.'
         }
     }
 }
